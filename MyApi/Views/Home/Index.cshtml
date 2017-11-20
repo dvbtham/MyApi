@@ -1,0 +1,81 @@
+﻿@model List<MyApi.Core.Domain.Product>
+@{
+    ViewBag.Title = "Home Page";
+}
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="jumbotron">
+        <h1>Login Area</h1>
+        <p class="lead">Login by using existed account.</p>
+        <p><a class="btn btn-lg btn-success" href="@Url.Action("Login", "Account")" role="button">Sign in</a></p>
+    </div>
+}
+
+@foreach (var item in Model)
+{
+    <div class="col-md-6">
+        <div style="position: relative">
+            <img src="@item.Image" style="display: block; margin: auto;" height="150" width="160" />
+            <h4 class="text-center">@item.Name</h4>
+            <p class="text-center text-danger">@item.Price.ToString("C0")</p>
+            <p class="text-center">@item.Description</p>
+        </div>
+
+        <a class="btn btn-block btn-info addToCart" href="#" data-id="@item.Id">Add To Cart</a>
+
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        $(".addToCart").on("click",
+            function (e) {
+                e.preventDefault();
+                var id = parseInt($(this).data('id'));
+
+                $.ajax({
+                    url: '/Cart/Add',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        productId: id
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            getProductCount();
+                            toastr.success('Thêm vào giỏ thành công.');
+                        } else {
+                            setTimeout(function () {
+                                toastr.error(res.message);
+                            },
+                                1800);
+                        }
+                    }
+                });
+            });
+
+        function getProductCount() {
+            var product_count = 0;
+            $.ajax({
+                url: '/Cart/GetAll',
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status) {
+                        var data = res.data;
+                        $.each(data, function (i, item) {
+                            product_count += item.Quantity;
+                            setProductCount(product_count);
+                        });
+                    }
+                }
+            });
+            return product_count;
+        }
+        function setProductCount(num) {
+            $('span.product-count').text(num);
+            localStorage.setItem("productCount", num);
+        }
+    </script>
+}

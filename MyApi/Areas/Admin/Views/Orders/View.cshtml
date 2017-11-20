@@ -1,0 +1,58 @@
+﻿@model MyApi.Core.Domain.Order
+
+@{
+    ViewBag.AdminTitle = "View Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h4>Order Owner @Model.CustomerName</h4>
+    <hr />
+    <div class="container">
+        <div class="notice notice-info">
+            <strong>Order Number</strong>#@Model.Id
+        </div>
+        <div class="notice notice-success">
+            <strong>Order Date</strong> @Model.OrderDate.ToShortDateString()
+        </div>
+        <div class="notice notice-danger">
+            <strong>Ship Date</strong> @Model.ShipDate.ToShortDateString()
+        </div>
+
+        <div class="notice notice-warning">
+            <strong>Staff </strong> @Model.User.Fullname
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                @{
+                    decimal total = 0;
+                }
+                <tbody>
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        total += item.Amount;
+                        <tr>
+                            <td>@item.Product.Name</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Product.Price.ToString("C0")</td>
+                            <td>@item.Amount.ToString("C0")</td>
+                        </tr>
+                    }
+                <tr><strong>Total:</strong> @total.ToString("C0")</tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/admin/orders">Back</a>
+    </div>
+</div>

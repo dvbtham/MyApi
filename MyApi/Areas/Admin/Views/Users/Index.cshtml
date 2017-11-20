@@ -1,0 +1,86 @@
+﻿@model List<MyApi.Core.ViewModel.UserViewModel>
+@{
+    ViewBag.AdminTitle = "User List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item active">@ViewBag.AdminTitle</li>
+    </ol>
+}
+<h2>User List</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Fullname</th>
+                <th>Email</th>
+                <th>Store</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Fullname</td>
+                    <td>@item.Email</td>
+                    <td>@item.Store.Name</td>
+                    <td>
+                        <a href="/admin/users/edit/@item.Id">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Index","UserRole", new { id = @item.Id })">
+                            <i class="fa fa-lock"></i>
+                        </a>
+                        <a href="javascript:void(0)">
+                            <i class="fa fa-trash btn-delete" data-id="@item.Id"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function () {
+
+            $("#dataTable").on('click',
+                ".btn-delete",
+                function (e) {
+                    e.preventDefault();
+                    var link = $(e.target);
+                    if (!confirm("Are you sure that you want to delete this product?")) return;
+
+                    $.ajax({
+                        url: "/admin/products/delete/" + link.attr('data-id'),
+                        method: "post",
+                        success: function (response) {
+                            console.log(response);
+
+                            link.parents("tr").fadeOut(function () {
+                                $(this).remove();
+                            });
+
+                        },
+                        error: function () {
+                            alert("Lỗi xảy ra. Vui lòng liên hệ với bộ phận dev.");
+                        }
+                    });
+                });
+        })
+    </script>
+}
+

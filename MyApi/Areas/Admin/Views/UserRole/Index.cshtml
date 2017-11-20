@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework
+@model  MyApi.Core.ViewModel.UserSaveViewModel
+
+@{
+    ViewBag.AdminTitle = "Cấp quyền cho " + Model.Fullname;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h4> @ViewBag.AdminTitle</h4>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tên đăng nhập</th>
+                <th>Email</th>
+                <th>Họ tên</th>
+                <th style="width: auto;">Quyền</th>
+                <th style="width:15%" class="text-center">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>@Model.Username</td>
+                <td>@Model.Email</td>
+                <td>@Model.Fullname</td>
+                <td>
+                    @{
+                        var roles = (IEnumerable<IdentityRole>)ViewBag.Roles;
+
+                    }
+                    @foreach (var item in roles)
+                    {
+                        var showChecked = Model.Roles.Contains(item.Name) ? "checked='checked'" : "";
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="btnRole" data-id="@Model.Id" data-role="@item.Name" @showChecked /> @item.Name
+                        </label>
+                    }
+                </td>
+                <td class="text-center">
+                    <button type="submit" onclick="window.location = '/admin/users'" title="Trở về" class="btn btn-sm btn-success"><i class="fa fa-backward"></i></button>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+
+@section scripts{
+    <script>
+
+
+        var btnRole = $("input[type='checkbox']");
+        btnRole.click(function () {
+            var role = $(this).data("role");
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/UserRole/UpdateRole",
+                type: "post",
+                dataType: "json",
+                data: {
+                    id: id, role: role
+                },
+                success: function (res) {
+                    location.reload();
+                }
+            })
+        })
+
+    </script>
+}

@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="table-responsive">
+    <table cellspacing="10" class="table table-bordered shop_table cart">
+        <thead>
+            <tr>
+                <th class="product-remove">&nbsp;</th>
+                <th class="product-thumbnail">&nbsp;</th>
+                <th class="product-name">Product</th>
+                <th class="product-price">Price</th>
+                <th class="product-quantity">Quantity</th>
+                <th class="product-subtotal">Amount</th>
+            </tr>
+        </thead>
+        <tbody id="cartBody"></tbody>
+        <tbody>
+            <tr>
+                <td class="actions" colspan="6">
+                    <input type="button" class="btn btn-primary" id="btnContinute" value="Shop" name="update_cart" class="button" />
+                    <input type="button" class="btn btn-primary" id="btnUpdate" value="Update" name="update_cart" class="button" />
+                    <input type="button" class="btn btn-primary" id="btnCheckout" value="Checkout" name="proceed" class="checkout-button button alt wc-forward" />
+                    <input type="button" class="btn btn-danger" id="btnDeleteAll" value="Set Empty" name="proceed" class="button" />
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="col-md-6 bangthanhtoan hide" id="bangthanhtoan">
+    <form class="form-horizontal" id="frmCheckout">
+        <fieldset>
+            <h4 id="ckecout-legend">Your infomation</h4>
+
+            <div class="form-group">
+                <div class="col-md-12 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input required name="fullname" id="fullname" placeholder="Fullname" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <div class="col-md-12 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                        <input required type="text" class="form-control" id="email" placeholder="Email" name="email" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <div class="col-md-12 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                        <input required type="text" class="form-control" id="phone" placeholder="Phone" name="phone" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <div class="col-md-12 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                        <input required type="text" class="form-control" id="address" placeholder="Address" name="address" />
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-12 control-label"></label>
+                <div class="col-md-12 inputGroupContainer">
+                    <button id="btnThanhToan" class="btn btn-warning">Checkout <span class="glyphicon glyphicon-ok-circle"></span></button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+</div>
+
+<script id="templateCart" type="x-tmpl-mustache">
+    <tr class="cart_item">
+        <td class="product-remove">
+            <a title="Delete this cart" data-id="{{ProductId}}" id="btnRemoveItem" class="remove" href="#">×</a>
+        </td>
+
+        <td class="product-thumbnail">
+            <a href="/"><img width="50" height="50" alt="poster_1_up" class="shop_thumbnail" src="{{Image}}"></a>
+        </td>
+
+        <td class="product-name">
+            <a href="/">{{ProductName}}</a>
+        </td>
+
+        <td class="product-price">
+            <span class="amount">{{FPrice}} đ</span>
+        </td>
+
+        <td class="product-quantity">
+            <div class="quantity buttons_added">
+                <input type="number" data-price="{{Price}}" data-id="{{ProductId}}" class="form-control input-text qty text txtQuantity" title="Quantity" value="{{Quantity}}" min="0" step="1">
+            </div>
+        </td>
+
+        <td class="product-subtotal" id="amount_{{ProductId}}">
+            <span class="amount">{{Amount}} đ</span>
+        </td>
+    </tr>
+</script>
+@section scripts
+{
+    <script src="~/Scripts/mustache.js"></script>
+    <script src="~/Scripts/cart.js"></script>
+}
+
